@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AMS Health</title>
+  <!-- Autres éléments head ici -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=VOTRE_API_KEY&callback=initMap" async defer></script>
+  <style>
+    /* Ajoutez vos styles CSS ici */
+    #map {
+      height: 300px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="acceuil-container">
+    <!-- Header Section -->
+    <header class="header">
+      <div class="logo">
+        <h2>AMS Health</h2>
+      </div>
+      <div class="button-group">
+        <button class="btn">Créer un compte</button>
+        <button class="btn">Se connecter</button>
+        <button class="btn admin">Administrateur</button>
+      </div>
+    </header>
+
+    <!-- Hero Section with Additional Information -->
+    <div class="hero-section">
+      <div class="overlay">
+        <h1>Bienvenue sur AMS Health</h1>
+        <p>Votre santé, notre priorité.</p>
+        <a href="#about" class="btn hero-btn">En savoir plus</a>
+      </div>
+    </div>
+
+    <!-- About the Site Section -->
+    <section class="about-site" id="about">
+      <h2>À propos de AMS Health</h2>
+      <p>AMS Health est une plateforme de santé en ligne qui vous aide à prendre rendez-vous avec des médecins qualifiés, gérer votre santé à distance et accéder à des soins adaptés à vos besoins spécifiques.</p>
+    </section>
+
+    <!-- Welcome Box Section with Contact Information -->
+    <section class="welcome-box">
+      <div class="contact-info">
+        <h3>Nous contacter</h3>
+        <ul>
+          <li><strong>Téléphone :</strong> +1 234 567 890</li>
+          <li><strong>Email :</strong> contactamshealth.com</li>
+          <li><strong>LinkedIn :</strong> <a href="https://www.linkedin.com" target="_blank">Profil LinkedIn</a></li>
+        </ul>
+      </div>
+      <div class="map-container">
+        <h3>Notre Localisation</h3>
+        <!-- La carte sera chargée ici -->
+        <div id="map"></div>
+      </div>
+    </section>
+
+    <!-- Rendez-vous Section -->
+    <section class="rendez-vous-container">
+      <h2 class="section-title">Prendre un rendez-vous</h2>
+
+      <form class="appointment-form" (ngSubmit)="onSubmit()" #appointmentForm="ngForm">
+        <div class="form-group">
+          <label for="doctor">Médecin</label>
+          <select id="doctor" [(ngModel)]="appointment.doctor" name="doctor" required>
+            <option value="">Choisir un médecin</option>
+            <option *ngFor="let doctor of doctors" [value]="doctor.id">
+              {{ doctor.name }} - {{ doctor.speciality }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="date">Date</label>
+          <input type="date" id="date" [(ngModel)]="appointment.date" name="date" required>
+        </div>
+
+        <div class="form-group">
+          <label for="time">Heure</label>
+          <select id="time" [(ngModel)]="appointment.time" name="time" required>
+            <option value="">Choisir une heure</option>
+            <option *ngFor="let slot of availableTimeSlots" [value]="slot">
+              {{ slot }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="reason">Motif de la consultation</label>
+          <textarea id="reason" [(ngModel)]="appointment.reason" name="reason" required></textarea>
+        </div>
+
+        <div class="location-section">
+          <h3>Notre localisation</h3>
+          <div id="map"></div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="resetForm()">Annuler</button>
+          <button type="submit" class="btn-primary" [disabled]="!appointmentForm.form.valid">
+            Confirmer le rendez-vous
+          </button>
+        </div>
+      </form>
+
+      <!-- Confirmation Modal -->
+      <div class="modal" *ngIf="showConfirmation">
+        <div class="modal-content">
+          <h3>Rendez-vous confirmé!</h3>
+          <p>Votre rendez-vous a été programmé pour le {{ appointment.date | date:'dd/MM/yyyy' }} 
+             à {{ appointment.time }} avec Dr. {{ getDocterName(appointment.doctor) }}</p>
+          <button class="btn-primary" (click)="closeConfirmation()">OK</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Autres sections ici -->
+
+  </div>
+
+  <script>
+    // Fonction pour initialiser la carte Google Maps
+    function initMap() {
+      const mapOptions = {
+        center: { lat: 36.813749572243324, lng: 10.06119097568831 }, // Coordonnées de la localisation
+        zoom: 12,
+      };
+      const map = new google.maps.Map(document.getElementById("map"), mapOptions);
+      const marker = new google.maps.Marker({
+        position: { lat: 36.813749572243324, lng: 10.06119097568831 },
+        map: map,
+        title: "Notre Localisation",
+      });
+    }
+  </script>
+</body>
+
+</html>

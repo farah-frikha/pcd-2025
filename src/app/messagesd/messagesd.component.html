@@ -1,0 +1,94 @@
+<div class="messages-layout">
+  <aside class="conversations-sidebar">
+    <div class="conversations-header">
+      <h3><i class="fas fa-comments"></i> Messages</h3>
+      <div class="header-actions">
+        <span class="active-count">{{ getActiveConversations().length }} en ligne</span>
+        <button class="icon-button"><i class="fas fa-plus"></i></button>
+      </div>
+    </div>
+
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Rechercher une conversation..." [(ngModel)]="searchTerm" />
+    </div>
+
+    <div class="conversations-list">
+      <div *ngFor="let conversation of filteredConversations()"
+           class="conversation-item"
+           [class.active]="conversation === selectedConversation"
+           [class.unread]="conversation.unread"
+           (click)="selectConversation(conversation)">
+        
+        <div class="conv-avatar">
+          <img [src]="conversation.avatar" [alt]="conversation.name">
+          <span class="status-dot" [class.online]="conversation.online"></span>
+        </div>
+
+        <div class="conv-content">
+          <div class="conv-header">
+            <h4>{{ conversation.name }}</h4>
+            <span class="speciality">{{ conversation.speciality }}</span>
+            <span class="time">{{ conversation.time }}</span>
+          </div>
+          <p class="last-message" [class.unread]="conversation.unread">
+            {{ conversation.lastMessage }}
+          </p>
+        </div>
+
+        <div class="conv-actions">
+          <span class="unread-badge" *ngIf="conversation.unread">
+            {{ conversation.unreadCount }}
+          </span>
+          <button class="delete-btn" (click)="deleteConversation(conversation); $event.stopPropagation()">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <section class="chat-area" *ngIf="selectedConversation">
+    <div class="chat-header">
+      <div class="chat-contact-info">
+        <img [src]="selectedConversation.avatar" [alt]="selectedConversation.name">
+        <div>
+          <h3>{{ selectedConversation.name }}</h3>
+          <span class="status" [class.online]="selectedConversation.online">
+            {{ selectedConversation.online ? 'En ligne' : 'Hors ligne' }}
+          </span>
+        </div>
+      </div>
+      <div class="chat-actions">
+        <button class="icon-button"><i class="fas fa-phone"></i></button>
+        <button class="icon-button"><i class="fas fa-video"></i></button>
+        <button class="icon-button"><i class="fas fa-ellipsis-v"></i></button>
+      </div>
+    </div>
+
+    <div class="message-container" #messageContainer>
+      <div *ngFor="let message of selectedConversation.messages"
+           class="message"
+           [class.outgoing]="message.outgoing"
+           [class.incoming]="!message.outgoing">
+        <div class="message-content">
+          <p>{{ message.text }}</p>
+          <span class="message-time">{{ getMessageTime(message) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="message-input-area">
+      <button class="icon-button"><i class="fas fa-paperclip"></i></button>
+      <div class="input-wrapper">
+        <input type="text"
+               [(ngModel)]="newMessage"
+               (keypress)="onKeyPress($event)"
+               placeholder="Tapez votre message...">
+      </div>
+      <button class="send-btn" (click)="sendMessage()" [disabled]="!newMessage.trim()">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </section>
+</div>

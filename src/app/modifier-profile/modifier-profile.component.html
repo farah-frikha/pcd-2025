@@ -1,0 +1,73 @@
+<div class="modifier-profile-container">
+  <div class="profile-header">
+    <h2><i class="fas fa-user-edit"></i> Modifier votre profil</h2>
+  </div>
+
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+    <div class="profile-photo-section">
+      <div class="photo-container">
+        <img [src]="imagePreview || 'assets/default-avatar.png'" alt="Photo de profil">
+        <div class="photo-upload">
+          <button type="button" class="upload-btn" (click)="triggerFileInput()">
+            <i class="fas fa-camera"></i>
+            Modifier
+          </button>
+          <input 
+            type="file" 
+            id="photo-upload" 
+            (change)="onFileChange($event)" 
+            accept="image/*"
+            hidden>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="nom"><i class="fas fa-user"></i> Nom complet</label>
+        <input type="text" id="nom" formControlName="nom" class="form-control">
+        <div class="error-message" *ngIf="profileForm.get('nom')?.errors?.['required'] && profileForm.get('nom')?.touched">
+          Le nom est requis
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="specialite"><i class="fas fa-stethoscope"></i> Spécialité</label>
+        <input type="text" id="specialite" formControlName="specialite" class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label for="email"><i class="fas fa-envelope"></i> Email</label>
+        <input type="email" id="email" formControlName="email" class="form-control">
+        <div class="error-message" *ngIf="profileForm.get('email')?.errors?.['email']">
+          Email invalide
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="telephone"><i class="fas fa-phone"></i> Téléphone</label>
+        <input type="tel" id="telephone" formControlName="telephone" class="form-control">
+      </div>
+
+      <div class="form-group full-width">
+        <label for="adresse"><i class="fas fa-map-marker-alt"></i> Adresse</label>
+        <input type="text" id="adresse" formControlName="adresse" class="form-control">
+      </div>
+
+      <div class="form-group full-width">
+        <label for="bio"><i class="fas fa-info-circle"></i> Biographie</label>
+        <textarea id="bio" formControlName="bio" class="form-control" rows="4"></textarea>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <div class="save-message" *ngIf="saveSuccess">
+        <i class="fas fa-check-circle"></i> Modifications enregistrées avec succès
+      </div>
+      <button type="button" class="btn btn-secondary">Annuler</button>
+      <button type="submit" class="btn btn-primary" [disabled]="!profileForm.valid">
+        <i class="fas fa-save"></i> Enregistrer les modifications
+      </button>
+    </div>
+  </form>
+</div>

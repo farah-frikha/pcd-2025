@@ -1,0 +1,15 @@
+<div class="analyse-container">
+  <h2>Analyse d'image</h2>
+  
+  <div class="capture-section">
+    <input type="file" (change)="captureImage($event)" accept="image/*" capture="environment">
+    <div class="preview" *ngIf="capturedImage">
+      <h3>Image capturée</h3>
+      <img [src]="capturedImage" alt="Captured image">
+    </div>
+    <div class="result" *ngIf="segmentedImage">
+      <h3>Image segmentée</h3>
+      <img [src]="segmentedImage" alt="Segmented image">
+    </div>
+  </div>
+</div>

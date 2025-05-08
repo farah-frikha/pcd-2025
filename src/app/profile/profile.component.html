@@ -1,0 +1,232 @@
+<div class="profile-container" [@pageAnimation]>
+  <div class="mini-header">
+    <nav class="nav-breadcrumb">
+      <a href="#" class="home-link">
+        <i class="fas fa-home"></i>
+        <span class="tooltip">Accueil</span>
+      </a>
+      <i class="fas fa-chevron-right divider"></i>
+      <span class="current-page">Mon Profil</span>
+    </nav>
+    <div class="header-actions">
+      <button class="help-btn" (click)="toggleHelp()">
+        <i class="fas fa-question-circle"></i>
+        <span>Aide</span>
+        <div class="tooltip">Obtenir de l'aide</div>
+      </button>
+      <button class="notification-btn">
+        <i class="fas fa-bell"></i>
+        <span class="notification-badge pulse">3</span>
+        <div class="tooltip">Notifications</div>
+      </button>
+      <button class="settings-btn" (click)="toggleSettings()">
+        <i class="fas fa-cog"></i>
+        <div class="tooltip">Paramètres</div>
+      </button>
+    </div>
+  </div>
+
+  <div class="profile-header" [@itemAnimation]>
+    <div class="profile-cover">
+      <div class="profile-avatar">
+        <img [src]="userProfile?.avatar" alt="Profile">
+        <div class="avatar-edit-overlay">
+          <input type="file" id="avatar-upload" (change)="onAvatarChange($event)" accept="image/*" hidden>
+          <label for="avatar-upload" class="avatar-edit-btn">
+            <i class="fas fa-camera"></i>
+          </label>
+        </div>
+      </div>
+    </div>
+    
+    <h2 class="profile-name">{{userProfile?.name}}</h2>
+    <div class="profile-role">Patient</div>
+    <div class="profile-status">
+      <i class="fas fa-circle"></i> Actif
+    </div>
+  </div>
+
+  <div class="profile-content">
+    <div class="profile-section fixed-info" [@itemAnimation]>
+      <h2>
+        <i class="fas fa-user-circle"></i> 
+        Informations Personnelles
+      </h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Nom</label>
+          <p>{{userProfile?.lastName}}</p>
+        </div>
+        <div class="info-item">
+          <label>Prénom</label>
+          <p>{{userProfile?.firstName}}</p>
+        </div>
+        <div class="info-item">
+          <label>Email</label>
+          <p><i class="fas fa-envelope"></i> {{userProfile?.email}}</p>
+        </div>
+        <div class="info-item">
+          <label>Téléphone</label>
+          <p><i class="fas fa-phone"></i> {{userProfile?.phone}}</p>
+        </div>
+        <div class="info-item">
+          <label>Adresse</label>
+          <p><i class="fas fa-map-marker-alt"></i> {{userProfile?.address}}</p>
+        </div>
+        <div class="info-item">
+          <label>Groupe sanguin</label>
+          <p><i class="fas fa-tint"></i> {{userProfile?.bloodType}}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-grid" [@itemAnimation]>
+      <div class="info-box stats-box">
+        <i class="fas fa-calendar-check"></i>
+        <h3>Rendez-vous</h3>
+        <p class="stats-number">12</p>
+        <p class="stats-label">Ce mois</p>
+      </div>
+
+      <div class="info-box health-box">
+        <i class="fas fa-heartbeat"></i>
+        <h3>État de santé</h3>
+        <div class="health-status">
+          <span class="status-indicator good"></span>
+          <p>Excellent</p>
+        </div>
+      </div>
+
+      <div class="info-box docs-box">
+        <i class="fas fa-file-medical"></i>
+        <h3>Documents</h3>
+        <ul class="docs-list">
+          <li>Ordonnances <span>3</span></li>
+          <li>Résultats <span>2</span></li>
+          <li>Radios <span>4</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="widget-grid" [@itemAnimation]>
+      <div class="doctor-profile-box">
+        <div class="doctor-header">
+          <div class="doctor-avatar">
+            <i class="fas fa-user-md"></i>
+          </div>
+          <div class="doctor-info">
+            <h3>Médecin traitant</h3>
+            <div class="doctor-title">Généraliste</div>
+          </div>
+        </div>
+        <div class="doctor-status">Dr. Martin</div>
+      </div>
+
+      <div class="treatment-widget-box">
+        <div class="treatment-widget-header">
+          <div class="treatment-widget-icon">
+            <i class="fas fa-pills"></i>
+          </div>
+          <div class="treatment-widget-info">
+            <h3 class="treatment-widget-title">Traitements</h3>
+          </div>
+        </div>
+        <div class="treatment-widget-badge">2 en cours</div>
+      </div>
+
+      <div class="health-tracking-box">
+        <div class="health-tracking-content">
+          <div class="health-tracking-header">
+            <div class="health-tracking-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <h3 class="health-tracking-title">Suivi Santé</h3>
+          </div>
+          <div class="health-tracking-info">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Votre prochain bilan est prévu dans 3 jours</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="help-modal" *ngIf="showHelp" [@fadeInOut]>
+  <div class="help-content">
+    <button class="close-help" (click)="toggleHelp()">
+      <i class="fas fa-times"></i>
+    </button>
+    <h2><i class="fas fa-question-circle"></i> Aide</h2>
+    <div class="help-sections">
+      <div class="help-section">
+        <h3>Navigation</h3>
+        <p>Utilisez le menu en haut pour naviguer entre les différentes sections de votre profil.</p>
+      </div>
+      <div class="help-section">
+        <h3>Modification du profil</h3>
+        <p>Cliquez sur le bouton "Modifier" pour mettre à jour vos informations personnelles.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Settings Modal for editing personal information -->
+<div class="settings-modal" *ngIf="showSettingsModal" [@fadeInOut]>
+  <div class="settings-content">
+    <div class="settings-header">
+      <h2><i class="fas fa-cog"></i> Modifier mes informations</h2>
+      <button class="close-btn" (click)="closeSettings()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <form class="settings-form" (ngSubmit)="saveSettings()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label><i class="fas fa-user"></i> Nom</label>
+          <input type="text" [(ngModel)]="editedProfile.lastName" name="lastName">
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-user"></i> Prénom</label>
+          <input type="text" [(ngModel)]="editedProfile.firstName" name="firstName">
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-envelope"></i> Email</label>
+          <input type="email" [(ngModel)]="editedProfile.email" name="email">
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-phone"></i> Téléphone</label>
+          <input type="tel" [(ngModel)]="editedProfile.phone" name="phone">
+        </div>
+        <div class="form-group full-width">
+          <label><i class="fas fa-map-marker-alt"></i> Adresse</label>
+          <input type="text" [(ngModel)]="editedProfile.address" name="address">
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-tint"></i> Groupe sanguin</label>
+          <select [(ngModel)]="editedProfile.bloodType" name="bloodType">
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="settings-actions">
+        <button type="button" class="cancel-btn" (click)="closeSettings()">
+          <i class="fas fa-times"></i> Annuler
+        </button>
+        <button type="submit" class="save-btn">
+          <i class="fas fa-check"></i> Enregistrer
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+</div>

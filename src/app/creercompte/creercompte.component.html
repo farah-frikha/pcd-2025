@@ -1,0 +1,85 @@
+<div class="register-container">
+  <h2>Créer un compte</h2>
+
+  <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+    <div>
+      <label>Rôle :</label>
+      <select [(ngModel)]="user.role" name="role" required>
+        <option value="">Choisir un rôle</option>
+        <option value="patient">Patient</option>
+        <option value="docteur">Docteur</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Prénom :</label>
+      <input type="text" [(ngModel)]="user.firstName" name="firstName" required />
+    </div>
+
+    <div>
+      <label>Nom :</label>
+      <input type="text" [(ngModel)]="user.lastName" name="lastName" required />
+    </div>
+
+    <div>
+      <label>Email :</label>
+      <input type="email" [(ngModel)]="user.email" name="email" required />
+    </div>
+
+    <div>
+      <label>Téléphone :</label>
+      <input type="text" [(ngModel)]="user.phone" name="phone" required />
+    </div>
+
+    <div>
+      <label>Mot de passe :</label>
+      <input type="password" [(ngModel)]="user.password" name="password" required />
+    </div>
+
+    <div>
+      <label>Confirmer mot de passe :</label>
+      <input type="password" [(ngModel)]="user.confirmPassword" name="confirmPassword" required />
+    </div>
+
+    <!-- Champs spécifiques au rôle -->
+    <div *ngIf="user.role === 'patient'">
+      <div>
+        <label>Numéro de sécurité sociale :</label>
+        <input type="text" [(ngModel)]="user.secu" name="secu" required />
+      </div>
+      <div>
+        <label>Date de naissance :</label>
+        <input type="date" [(ngModel)]="user.birthDate" name="birthDate" required />
+      </div>
+      <div>
+        <label>Groupe sanguin :</label>
+        <input type="text" [(ngModel)]="user.bloodType" name="bloodType" required />
+      </div>
+    </div>
+
+    <div *ngIf="user.role === 'docteur'">
+      <div>
+        <label>Spécialité :</label>
+        <input type="text" [(ngModel)]="user.specialite" name="specialite" required />
+      </div>
+      <div>
+        <label>Numéro RPPS :</label>
+        <input type="text" [(ngModel)]="user.rpps" name="rpps" required />
+      </div>
+    </div>
+
+    <div>
+      <label>
+        <input type="checkbox" [(ngModel)]="user.termsAccepted" name="termsAccepted" required />
+        J'accepte les termes et conditions
+      </label>
+    </div>
+
+    <button type="submit" [disabled]="!registerForm.form.valid">Créer le compte</button>
+  </form>
+
+  <!-- ✅ Message de succès -->
+  <div *ngIf="showSuccessMessage" style="color: green; font-weight: bold; margin-top: 20px;">
+    ✅ Compte créé avec succès ! Redirection en cours...
+  </div>
+</div>

@@ -1,0 +1,197 @@
+<div class="messages-layout">
+  <!-- Sidebar des conversations -->
+  <div class="conversations-sidebar">
+    <div class="conversations-header">
+      <h2>Messages</h2>
+      <button class="icon-button primary" (click)="startNewConversation()">
+        <i class="fas fa-edit"></i>
+        <span class="tooltip">Nouveau message</span>
+      </button>
+    </div>
+
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Rechercher une conversation...">
+    </div>
+
+    <div class="conversations-list">
+      <div class="conversation-item" 
+           *ngFor="let conv of conversations"
+           [class.active]="currentChat?.id === conv.id"
+           (click)="selectConversation(conv)">
+        <div class="conv-avatar">
+          <img [src]="conv.avatar" [alt]="conv.name">
+          <span class="status-dot" [class.online]="conv.isOnline"></span>
+        </div>
+        <div class="conv-content">
+          <div class="conv-header">
+            <h4>{{conv.name}}</h4>
+            <span class="time">{{conv.lastMessageTime}}</span>
+          </div>
+          <p class="last-message">{{conv.lastMessage}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zone principale des messages -->
+  <div class="chat-area">
+    <div class="chat-header">
+      <div class="chat-contact-info">
+        <img [src]="currentChat?.avatar" [alt]="currentChat?.name">
+        <div>
+          <h3>{{currentChat?.name}}</h3>
+          <span class="status">{{currentChat?.isOnline ? 'En ligne' : 'Hors ligne'}}</span>
+        </div>
+      </div>
+      <div class="chat-actions">
+        <button class="icon-button" (click)="startCall()">
+          <i class="fas fa-phone"></i>
+          <span class="tooltip">Appeler</span>
+        </button>
+        <button class="icon-button" (click)="startVideoCall()">
+          <i class="fas fa-video"></i>
+          <span class="tooltip">Appel vidéo</span>
+        </button>
+        <button class="icon-button" (click)="showInfo()">
+          <i class="fas fa-info-circle"></i>
+          <span class="tooltip">Informations</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="messages-container" #scrollContainer>
+      <div class="message-container" *ngIf="selectedConversation">
+        <div class="message" [ngClass]="{'outgoing': msg.isSent, 'incoming': !msg.isSent, 'with-image': msg.hasImage, 'with-file': msg.hasFile}" *ngFor="let msg of selectedConversation.messages">
+          <img [src]="msg.avatar" [alt]="msg.sender" *ngIf="!msg.isSent" class="message-avatar">
+          <div class="message-content">
+            <!-- Image message -->
+            <img *ngIf="msg.hasImage" [src]="msg.imageUrl" alt="Shared image" class="message-image">
+            
+            <!-- File message -->
+            <div *ngIf="msg.hasFile" class="file-attachment">
+              <i class="fas fa-file"></i>
+              <span>{{msg.fileName}}</span>
+              <span class="file-size">{{msg.fileSize}}</span>
+            </div>
+            
+            <!-- Text message -->
+            <p [ngClass]="{'emoji-message': msg.isEmoji}">{{msg.text}}</p>
+            
+            <div class="message-meta">
+              <span class="message-time">{{msg.time}}</span>
+              <i *ngIf="msg.isSent" class="fas fa-check" [class.read]="msg.isRead"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="message-input-area">
+      <button class="icon-button" (click)="openAttachmentMenu()">
+        <i class="fas fa-paperclip"></i>
+        <span class="tooltip">Joindre un fichier</span>
+      </button>
+      <div class="input-wrapper">
+        <input type="text" 
+               placeholder="Écrivez votre message..." 
+               [(ngModel)]="newMessage"
+               (keyup.enter)="sendMessage()">
+        <div class="emoji-wrapper">
+          <button class="icon-button" (click)="toggleEmojiPicker()">
+            <i class="far fa-smile"></i>
+            <span class="tooltip">Emoji</span>
+          </button>
+          <div class="emoji-picker" *ngIf="showEmojiPicker">
+            <div class="emoji-container">
+              <span *ngFor="let emoji of emojis" 
+                    (click)="addEmoji(emoji)"
+                    class="emoji-item">
+                {{emoji}}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="icon-button primary" 
+              [class.disabled]="!newMessage"
+              (click)="sendMessage()">
+        <i class="fas fa-paper-plane"></i>
+        <span class="tooltip">Envoyer</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Info Panel -->
+<div class="info-panel" [class.active]="showInfoPanel">
+  <div class="info-header">
+    <h3>Informations</h3>
+    <button class="close-btn" (click)="toggleInfo()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <div class="info-content">
+    <div class="participant-info">
+      <img [src]="currentChat?.avatar" [alt]="currentChat?.name">
+      <h4>{{currentChat?.name}}</h4>
+      <p class="status">{{currentChat?.isOnline ? 'En ligne' : 'Hors ligne'}}</p>
+    </div>
+
+    <div class="info-section">
+      <h5>Actions</h5>
+      <div class="action-buttons">
+        <button class="action-btn">
+          <i class="fas fa-bell"></i>
+          <span>Notifications</span>
+        </button>
+        <button class="action-btn">
+          <i class="fas fa-search"></i>
+          <span>Rechercher</span>
+        </button>
+        <button class="action-btn warning">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span>Signaler</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h5>Médias partagés</h5>
+      <div class="media-grid">
+        <div class="media-item" *ngFor="let media of sharedMedia">
+          <img [src]="media.url" [alt]="media.type">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Appel Dialog -->
+<div class="call-dialog" *ngIf="activeCall">
+  <div class="call-content" [ngClass]="{'video-mode': activeCall.isVideo}">
+    <div class="call-header">
+      <img [src]="activeCall.avatar" [alt]="activeCall.name">
+      <h3>{{activeCall.isVideo ? 'Appel vidéo' : 'Appel'}} avec {{activeCall.name}}</h3>
+      <p class="call-duration">{{activeCall.duration}}</p>
+    </div>
+    
+    <div class="video-container" *ngIf="activeCall.isVideo">
+      <video class="remote-video" #remoteVideo></video>
+      <video class="local-video" #localVideo></video>
+    </div>
+
+    <div class="call-controls">
+      <button class="control-btn" (click)="toggleMute()">
+        <i class="fas" [class.fa-microphone]="!isMuted" [class.fa-microphone-slash]="isMuted"></i>
+      </button>
+      <button class="control-btn end-call" (click)="endCall()">
+        <i class="fas fa-phone-slash"></i>
+      </button>
+      <button class="control-btn" *ngIf="activeCall.isVideo" (click)="toggleVideo()">
+        <i class="fas" [class.fa-video]="!isVideoOff" [class.fa-video-slash]="isVideoOff"></i>
+      </button>
+    </div>
+  </div>
+</div>

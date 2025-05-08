@@ -1,0 +1,194 @@
+<div class="main-container">
+    <div class="profile-section">
+        <div class="doctor-profile">
+            <div class="avatar-container">
+              <div class="avatar-wrapper">
+                <img
+                  [src]="selectedDoctor.avatar || 'assets/images/default-avatar.png'"
+                  alt="Avatar"
+                  class="avatar"
+                  (click)="triggerFileInput()"
+                />
+                <div class="overlay-text">Changer photo de profil</div>
+
+                <div class="photo-overlay" [class.show]="showChangePhotoMessage">
+                  <span>Changer photo de profil</span>
+                </div>
+              </div>
+              <input
+                type="file"
+                #fileInput
+                style="display: none"
+                (change)="onProfileImageSelected($event)"
+                accept="image/*"
+              />
+            <div class="info">
+              <h2>{{ selectedDoctor.name }}</h2>
+              <p>Spécialité : {{ selectedDoctor.specialty }}</p>
+              <p>Email : {{ selectedDoctor.email }}</p>
+              <p>Téléphone : {{ selectedDoctor.phone }}</p>
+            </div>
+          </div>
+          
+          <div class="spacer"></div>
+
+  
+          <nav class="nav-menu">
+            <ul>
+              <li>
+                <button [class.active]="activeSection === 'acceuil'" (click)="setActiveSection('acceuil')">
+                  <a [routerLink]="['/Accueil']" style="all: unset; cursor: pointer;">
+                    <i class="fas fa-home"></i>
+                    <span>Accueil</span>
+                  </a>
+                </button>
+              </li>
+              <li>
+                <button [class.active]="activeSection === 'consultation'" (click)="setActiveSection('consultation')">
+                  <a [routerLink]="['/consultation']" style="all: unset; cursor: pointer;">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Consultation</span>
+                    <span class="notification-badge">3</span>
+                  </a>
+                </button>
+              </li>
+              <li>
+                <button [class.active]="activeSection === 'messages'" (click)="setActiveSection('messages')">
+                  <a [routerLink]="['/messagesd']" style="all: unset; cursor: pointer;">
+                    <i class="fas fa-envelope"></i>
+                    <span>Messages</span>
+                    <span class="notification-badge">5</span>
+                  </a>
+                </button>
+              </li>
+              <li>
+                <button [class.active]="activeSection === 'patients'" (click)="setActiveSection('patients')">
+                  <a [routerLink]="['/patients']" style="all: unset; cursor: pointer;">
+                    <i class="fas fa-users"></i>
+                    <span>Patients</span>
+                  </a>
+                </button>
+              </li>
+              <li>
+                <button [class.active]="activeSection === 'modifier Profil'" (click)="setActiveSection('modifier Profil')">
+                  <a [routerLink]="['/modifierprofile']" style="all: unset; cursor: pointer;">
+                    <i class="fas fa-user-edit"></i>
+                    <span>Modifier Profil</span>
+                  </a>
+                </button>
+
+              </li>
+              <li>
+                <button [class.active]="activeSection === 'analyse'" (click)="setActiveSection('analyse')">
+                  <a [routerLink]="['/analyse']" style="all: unset; cursor: pointer;">
+                    <i class="fas fa-user-edit"></i>
+                    <span>analyse</span>
+                  </a>
+                </button>
+                
+              </li>
+            </ul>
+          </nav>
+          
+    </div>
+  
+    <!-- Rest of your existing content section -->
+  </div>
+  
+    <div class="content-section">
+      <div class="welcome-banner">
+        <h1>Bonjour,  {{ selectedDoctor.name }}</h1>
+        <p>{{ today | date:'EEEE d MMMM yyyy':'':'fr-FR' | titlecase }}</p>
+      </div>
+  
+      <div class="quick-actions-bar">
+        <button class="action-button">
+          <i class="fas fa-plus-circle"></i>
+          Nouvelle Consultation
+        </button>
+        <button class="action-button">
+          <i class="fas fa-user-plus"></i>
+          Ajouter Patient
+        </button>
+        <button class="action-button">
+          <i class="fas fa-file-medical"></i>
+          Créer Rapport
+        </button>
+      </div>
+  
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon blue">
+              <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">8</div>
+              <div class="stat-label">Consultations Aujourd'hui</div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon blue">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">145</div>
+              <div class="stat-label">Patients Total</div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon blue">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">3</div>
+              <div class="stat-label">En Attente</div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="recent-activity">
+        <div class="activity-header">
+          <h2>Activités Récentes</h2>
+        </div>
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-icon">
+              <i class="fas fa-user-check"></i>
+            </div>
+            <div class="activity-content">
+              <div class="activity-title">Consultation avec Marie Martin</div>
+              <div class="activity-time">Il y a 30 minutes</div>
+            </div>
+          </div>
+  
+          <div class="activity-item">
+            <div class="activity-icon">
+              <i class="fas fa-file-medical"></i>
+            </div>
+            <div class="activity-content">
+              <div class="activity-title">Rapport médical mis à jour</div>
+              <div class="activity-time">Il y a 2 heures</div>
+            </div>
+          </div>
+  
+          <div class="activity-item">
+            <div class="activity-icon">
+              <i class="fas fa-user-plus"></i>
+            </div>
+            <div class="activity-content">
+              <div class="activity-title">Nouveau patient enregistré</div>
+              <div class="activity-time">Il y a 4 heures</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

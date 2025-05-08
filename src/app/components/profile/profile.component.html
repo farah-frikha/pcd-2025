@@ -1,0 +1,51 @@
+<div class="profile-container">
+  <div class="profile-header">
+    <h1>Mon Profil</h1>
+    <p>Gérez vos informations personnelles et suivez vos activités</p>
+  </div>
+
+  <div class="profile-grid">
+    <!-- Informations personnelles -->
+    <div class="profile-card">
+      <h2>Informations personnelles</h2>
+      <div class="info-group">
+        <div class="info-label">Nom complet</div>
+        <div class="info-value">{{patient.prenom}} {{patient.nom}}</div>
+      </div>
+      <div class="info-group">
+        <div class="info-label">Email</div>
+        <div class="info-value">{{patient.email}}</div>
+      </div>
+      <div class="info-group">
+        <div class="info-label">Téléphone</div>
+        <div class="info-value">{{patient.telephone}}</div>
+      </div>
+      <div class="info-group">
+        <div class="info-label">Date de naissance</div>
+        <div class="info-value">{{patient.dateNaissance | date:'dd/MM/yyyy'}}</div>
+      </div>
+      <button class="edit-button" (click)="editProfile()">
+        <i class="fas fa-edit"></i> Modifier le profil
+      </button>
+    </div>
+
+    <!-- Statistiques et activités -->
+    <div class="profile-card">
+      <h2>Mes activités</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">{{stats.rdvCount}}</div>
+          <div class="stat-label">Rendez-vous</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{stats.consultations}}</div>
+          <div class="stat-label">Consultations</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{stats.prescriptions}}</div>
+          <div class="stat-label">Ordonnances</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

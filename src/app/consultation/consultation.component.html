@@ -1,0 +1,153 @@
+<div class="consultation-section">
+    <header class="section-header">
+        <h2><i class="fas fa-stethoscope"></i> Gestion des Consultations</h2>
+        <div class="consultation-stats">
+            <span>Total: {{filteredConsultation.length}}</span>
+            <span>Aujourd'hui: {{getTodayAppointments()}}</span>
+        </div>
+    </header>
+    
+    <div class="filters">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Rechercher un patient..." (input)="filterAppointments($event)">
+        </div>
+        <div class="filter-group">
+            <select (change)="filterByStatus($event)" class="status-filter">
+                <option value="all">Tous les rendez-vous</option>
+                <option value="upcoming">À venir</option>
+                <option value="past">Passés</option>
+                <option value="today">Aujourd'hui</option>
+            </select>
+            <select (change)="filterByPriority($event)" class="priority-filter">
+                <option value="all">Toutes priorités</option>
+                <option value="normal">Normal</option>
+                <option value="urgent">Urgent</option>
+            </select>
+        </div>
+    </div>
+
+    <form class="consultation-form" (ngSubmit)="addAppointment(newAppointment)">
+        <div class="form-grid">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Patient</label>
+                <input type="text" [(ngModel)]="newAppointment.patientName" name="patientName" placeholder="Nom du patient" required>
+            </div>
+            <div class="form-group">
+                <label><i class="far fa-calendar"></i> Date</label>
+                <input type="date" [(ngModel)]="newAppointment.date" name="date" required>
+            </div>
+            <div class="form-group">
+                <label><i class="far fa-clock"></i> Heure</label>
+                <input type="time" [(ngModel)]="newAppointment.time" name="time" required>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-hourglass-half"></i> Durée</label>
+                <select [(ngModel)]="newAppointment.duration" name="duration" required>
+                    <option value="15">15 minutes</option>
+                    <option value="30">30 minutes</option>
+                    <option value="45">45 minutes</option>
+                    <option value="60">1 heure</option>
+                </select>
+            </div>
+            <div class="form-group full-width">
+                <label><i class="fas fa-notes-medical"></i> Motif</label>
+                <textarea [(ngModel)]="newAppointment.reason" name="reason" placeholder="Motif de la consultation" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-exclamation-circle"></i> Priorité</label>
+                <select [(ngModel)]="newAppointment.status" name="status">
+                    <option value="scheduled">Normal</option>
+                    <option value="urgent">Urgent</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="reset" class="reset-btn"><i class="fas fa-undo"></i> Réinitialiser</button>
+            <button type="submit" class="submit-btn"><i class="fas fa-plus"></i> Ajouter le rendez-vous</button>
+        </div>
+        <!-- Boutons de contrôle -->
+        <div class="form-actions">
+            <button type="button" (click)="addAppointment(newAppointment)" *ngIf="!isEditing" class="btn btn-primary">
+                Ajouter
+            </button>
+            <button type="button" (click)="saveModification()" *ngIf="isEditing" class="btn btn-success">
+                Enregistrer les modifications
+            </button>
+            <button type="button" (click)="cancelModification()" *ngIf="isEditing" class="btn btn-secondary">
+                Annuler
+            </button>
+        </div>
+    </form>
+  
+    <div class="consultation-list">
+        <div class="appointment-card" *ngFor="let appointment of filteredConsultation" [ngClass]="appointment.status">
+            <div class="appointment-info">
+                <h3>{{ appointment.patientName }}</h3>
+                <div class="appointment-details">
+                    <p class="appointment-date">📅 {{ appointment.date | date:'dd/MM/yyyy' }}</p>
+                    <p class="appointment-time">⏰ {{ appointment.time }}</p>
+                    <p class="appointment-status" [ngClass]="appointment.status">
+                        {{ getStatusLabel(appointment.status) }}
+                    </p>
+                </div>
+                <p class="appointment-reason">{{ appointment.reason }}</p>
+            </div>
+            <div class="appointment-actions">
+                <button class="edit-btn" (click)="modifyAppointment(appointment)">
+                    <i class="fas fa-edit"></i> Modifier
+                </button>
+                <button class="delete-btn" (click)="cancelAppointment(appointment)">
+                    <i class="fas fa-times"></i> Annuler
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="consultation-actions">
+        <button class="btn-primary" (click)="showRequestsModal = true">
+            <i class="fas fa-bell"></i>
+            Demandes de consultation
+            <span class="badge" *ngIf="pendingRequests.length">{{ pendingRequests.length }}</span>
+        </button>
+    </div>
+    
+    <!-- Modal des demandes -->
+    <div class="modal" *ngIf="showRequestsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Demandes de consultation</h2>
+                <button class="close-btn" (click)="showRequestsModal = false">×</button>
+            </div>
+    
+            <div class="requests-list">
+                <div *ngFor="let request of consultationRequests" class="request-card">
+                    <div class="request-info">
+                        <h3>{{ request.patientName }}</h3>
+                        <p><i class="far fa-calendar"></i> Demandé le: {{ request.requestDate | date:'dd/MM/yyyy' }}</p>
+                        <p><i class="fas fa-info-circle"></i> Motif: {{ request.reason }}</p>
+                        <p *ngIf="request.preferredDate">
+                            <i class="far fa-clock"></i> Date souhaitée: {{ request.preferredDate | date:'dd/MM/yyyy' }}
+                        </p>
+                    </div>
+                    <div class="request-actions" *ngIf="request.status === 'pending'">
+                        <button class="btn-accept" (click)="acceptRequest(request)">
+                            <i class="fas fa-check"></i> Accepter
+                        </button>
+                        <button class="btn-reject" (click)="rejectRequest(request)">
+                            <i class="fas fa-times"></i> Refuser
+                        </button>
+                    </div>
+                    <div class="request-status" [ngClass]="request.status">
+                        <i class="fas" [ngClass]="{
+                            'fa-clock': request.status === 'pending',
+                            'fa-check': request.status === 'accepted',
+                            'fa-times': request.status === 'rejected'
+                        }"></i>
+                        {{ request.status | titlecase }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    

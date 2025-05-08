@@ -1,0 +1,251 @@
+.form-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .form-header h2 {
+    color: #2563eb;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-header p {
+    color: #64748b;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    color: #1e293b;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .input-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  input, select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+  }
+  
+  input:focus, select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+  
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .checkbox-group input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+  }
+  
+  .form-actions {
+    text-align: center;
+  }
+  
+  .btn-submit {
+    width: 100%;
+    padding: 1rem;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-submit:hover {
+    background: #1d4ed8;
+  }
+  
+  .btn-submit:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+  }
+  
+  .login-link {
+    margin-top: 1rem;
+    color: #64748b;
+  }
+  
+  .login-link a {
+    color: #2563eb;
+    text-decoration: none;
+  }
+  
+  .form-footer {
+    margin-top: 2rem;
+    text-align: center;
+  }
+  
+  .secure-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: #10b981;
+  }
+  
+  .secure-info i {
+    font-size: 1.2rem;
+  }
+
+.register-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.register-container h2 {
+  color: #2c3e50;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: 2rem;
+  position: relative;
+}
+
+.register-container h2::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 3px;
+  background: #4a90e2;
+  margin: 0.5rem auto;
+}
+
+form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+form > div {
+  margin-bottom: 1rem;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #495057;
+  font-weight: 500;
+}
+
+input, select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+button[type="submit"] {
+  grid-column: 1 / -1;
+  padding: 1rem;
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button[type="submit"]:hover:not([disabled]) {
+  background: #357abd;
+}
+
+button[type="submit"]:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+input[type="checkbox"] {
+  width: auto;
+  margin-right: 0.5rem;
+}
+
+.success-message {
+  text-align: center;
+  color: #28a745;
+  padding: 1rem;
+  margin-top: 1rem;
+  background: #d4edda;
+  border-radius: 6px;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .register-container {
+    margin: 1rem;
+    padding: 1rem;
+  }
+
+  form {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Style spécifique pour les sections de rôle */
+.role-specific-fields {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  grid-column: 1 / -1;
+}

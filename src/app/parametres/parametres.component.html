@@ -1,0 +1,304 @@
+<div class="settings-container animate__animated animate__fadeIn">
+  <div class="settings-header">
+    <h1 class="settings-title">Paramètres</h1>
+    <p class="settings-description">
+      Personnalisez votre expérience et gérez vos préférences de compte
+    </p>
+    <div class="header-actions">
+      <button class="action-button" (click)="toggleHelp()">
+        <i class="fas fa-question-circle"></i>
+      </button>
+      <button class="action-button" *ngIf="hasChanges" (click)="saveSettings()">
+        <i class="fas fa-save"></i>
+      </button>
+    </div>
+  </div>
+  <div class="header-breadcrumb">
+    <span>Accueil</span>
+    <i class="fas fa-chevron-right"></i>
+    <span>Paramètres</span>
+    <i class="fas fa-chevron-right"></i>
+    <span>{{currentSection | titlecase}}</span>
+  </div>
+</div>
+
+<div class="settings-nav">
+  <button class="nav-item" [class.active]="currentSection === 'general'" (click)="currentSection = 'general'">
+    <div class="nav-icon">
+      <i class="fas fa-sliders-h"></i>
+    </div>
+    <div class="nav-content">
+      <span class="nav-title">Général</span>
+      <span class="nav-desc">Paramètres basiques</span>
+    </div>
+  </button>
+
+  <button class="nav-item" [class.active]="currentSection === 'notifications'" (click)="currentSection = 'notifications'">
+    <div class="nav-icon">
+      <i class="fas fa-bell"></i>
+    </div>
+    <div class="nav-content">
+      <span class="nav-title">Notifications</span>
+      <span class="nav-desc">Gérer les alertes</span>
+    </div>
+  </button>
+
+  <button class="nav-item" [class.active]="currentSection === 'privacy'" (click)="currentSection = 'privacy'">
+    <div class="nav-icon">
+      <i class="fas fa-shield-alt"></i>
+    </div>
+    <div class="nav-content">
+      <span class="nav-title">Confidentialité</span>
+      <span class="nav-desc">Sécurité & données</span>
+    </div>
+  </button>
+
+  <button class="nav-item" [class.active]="currentSection === 'accessibility'" (click)="currentSection = 'accessibility'">
+    <div class="nav-icon">
+      <i class="fas fa-universal-access"></i>
+    </div>
+    <div class="nav-content">
+      <span class="nav-title">Accessibilité</span>
+      <span class="nav-desc">Options d'affichage</span>
+    </div>
+  </button>
+
+  <button class="nav-item" [class.active]="currentSection === 'medical'" (click)="currentSection = 'medical'">
+    <div class="nav-icon">
+      <i class="fas fa-notes-medical"></i>
+    </div>
+    <div class="nav-content">
+      <span class="nav-title">Préférences Médicales</span>
+      <span class="nav-desc">Options de santé</span>
+    </div>
+  </button>
+</div>
+
+<div class="settings-content">
+  <!-- Section Général -->
+  <div *ngIf="currentSection === 'general'" class="settings-section">
+    <h3>Paramètres Généraux</h3>
+    
+    <div class="setting-item">
+      <div class="setting-info">
+        <span>Langue</span>
+        <p>Choisissez la langue de l'application</p>
+      </div>
+      <select [(ngModel)]="settings.language" 
+              (ngModelChange)="changeLanguage($event)" 
+              class="setting-control">
+        <option value="fr">Français</option>
+        <option value="en">English</option>
+        <option value="ar">العربية</option>
+      </select>
+    </div>
+
+    <div class="setting-item">
+      <div class="setting-info">
+        <span>Thème</span>
+        <p>Personnalisez l'apparence</p>
+      </div>
+      <div class="theme-options">
+        <label class="theme-option" *ngFor="let theme of themes">
+          <input type="radio" 
+                 [value]="theme.value" 
+                 [(ngModel)]="settings.theme" 
+                 (ngModelChange)="applyTheme($event)">
+          <span class="theme-preview" [style.backgroundColor]="theme.color"></span>
+          <span>{{theme.label}}</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section Notifications -->
+  <div *ngIf="currentSection === 'notifications'" class="settings-section">
+    <h3>Notifications</h3>
+    
+    <div class="setting-item">
+      <div class="setting-info">
+        <span>Rappels de rendez-vous</span>
+        <p>Quand souhaitez-vous être notifié?</p>
+      </div>
+      <select [(ngModel)]="settings.appointmentReminder" class="setting-control">
+        <option value="1">1 jour avant</option>
+        <option value="2">2 jours avant</option>
+        <option value="7">1 semaine avant</option>
+      </select>
+    </div>
+
+    <div class="notifications-section">
+      <div *ngFor="let type of notificationTypes" 
+           class="notification-item"
+           [@notificationState]="notificationState[type.value]"
+           [@notificationFeedback]="notificationFeedback[type.value]">
+        <div class="notification-content">
+          <i [class]="type.icon"></i>
+          <span>{{type.label}}</span>
+          <label class="switch">
+            <input type="checkbox" 
+                   [checked]="settings.notifications[type.value]"
+                   (change)="handleNotificationChange(type.value, $event)">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section Confidentialité -->
+  <div *ngIf="currentSection === 'privacy'" class="settings-section">
+    <h3><i class="fas fa-lock"></i> Confidentialité</h3>
+    
+    <div class="setting-item">
+      <div class="setting-info">
+        <span>Visibilité du profil</span>
+        <p>Qui peut voir votre profil médical</p>
+      </div>
+      <select [(ngModel)]="settings.privacy.profileVisibility" (ngModelChange)="onInputChange()" class="setting-control">
+        <option *ngFor="let option of privacyOptions" [value]="option.value">
+          {{option.label}}
+        </option>
+      </select>
+    </div>
+
+    <div class="setting-item">
+      <div class="setting-info">
+        <span>Statut en ligne</span>
+        <p>Afficher votre statut de connexion</p>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" [(ngModel)]="settings.privacy.activityStatus" (ngModelChange)="onInputChange()">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="setting-item security-section">
+      <div class="setting-info">
+        <span>Double authentification</span>
+        <p>Sécurité renforcée pour votre compte</p>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" [(ngModel)]="settings.security.twoFactorAuth" (ngModelChange)="onInputChange()">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Section Accessibilité -->
+  <div *ngIf="currentSection === 'accessibility'" class="settings-section">
+    <h3><i class="fas fa-universal-access"></i> Accessibilité</h3>
+    
+    <div class="setting-item">
+      <div class="setting-info">
+        <span>Taille du texte</span>
+        <p>Ajustez la taille du texte de l'application</p>
+      </div>
+      <div class="font-size-slider">
+        <input type="range" 
+               min="12" 
+               max="24" 
+               step="2"
+               [(ngModel)]="settings.accessibility.fontSize"
+               (ngModelChange)="onInputChange()">
+        <div class="size-preview" [style.fontSize.px]="settings.accessibility.fontSize">
+          Exemple de texte
+        </div>
+      </div>
+    </div>
+
+    <div class="setting-item">
+      <div class="setting-info">
+        <span>Mode contraste élevé</span>
+        <p>Améliore la lisibilité</p>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" [(ngModel)]="settings.accessibility.highContrast" (ngModelChange)="onInputChange()">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="setting-item">
+      <div class="setting-info">
+        <span>Animations réduites</span>
+        <p>Réduit les effets de mouvement</p>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" [(ngModel)]="settings.accessibility.reducedMotion" (ngModelChange)="onInputChange()">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Préférences Médicales -->
+  <div *ngIf="currentSection === 'medical'" class="settings-section">
+    <h3>Préférences Médicales</h3>
+    
+    <div class="medical-preferences">
+      <div class="setting-item">
+        <div class="setting-info">
+          <span>Partage des données médicales</span>
+          <p>Autoriser le partage avec les professionnels de santé</p>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" [(ngModel)]="settings.shareHealthData" (ngModelChange)="onInputChange()">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <span>Historique des consultations</span>
+          <p>Durée de conservation de l'historique</p>
+        </div>
+        <select [(ngModel)]="settings.historyDuration" (ngModelChange)="onInputChange()" class="setting-control">
+          <option value="6">6 mois</option>
+          <option value="12">1 an</option>
+          <option value="24">2 ans</option>
+          <option value="0">Illimité</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Déplacer les boutons ici, avant la fin du container -->
+<div class="action-buttons">
+  <button class="btn-cancel" (click)="cancelChanges()" [disabled]="!hasChanges">
+    <i class="fas fa-times"></i>
+    <span>Annuler</span>
+  </button>
+  <button class="btn-save" (click)="saveSettings()" [disabled]="!hasChanges || isSaving">
+    <i [class]="isSaving ? 'fas fa-spinner fa-spin' : 'fas fa-save'"></i>
+    <span>{{isSaving ? 'Enregistrement...' : 'Enregistrer'}}</span>
+  </button>
+</div>
+
+<!-- Modal d'aide -->
+<div class="help-modal" [class.show]="showHelp">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3><i class="fas fa-question-circle"></i> Centre d'aide</h3>
+      <button class="close-btn" (click)="toggleHelp()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="help-section">
+        <h4>Navigation</h4>
+        <p>Utilisez les boutons de navigation pour accéder aux différentes sections des paramètres.</p>
+      </div>
+      <div class="help-section">
+        <h4>Sauvegarde</h4>
+        <p>N'oubliez pas de cliquer sur "Enregistrer" pour sauvegarder vos modifications.</p>
+      </div>
+      <div class="help-section">
+        <h4>Besoin d'aide supplémentaire ?</h4>
+        <button class="contact-support-btn">
+          <i class="fas fa-headset"></i>
+          Contacter le support
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

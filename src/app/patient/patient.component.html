@@ -1,0 +1,374 @@
+<div class="app-container">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="user-profile">
+      <div class="profile-image">
+        <img src="/assets/images/avatar.png" alt="avatar" />
+        <span class="status-badge"></span>
+      </div>
+      <h3>{{patient.prenom}} {{patient.nom}}</h3>
+      <p class="user-role">Patient</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a [routerLink]="['/Accueil']" routerLinkActive="active" class="nav-item" style="--item-index: 1">
+        <i class="fas fa-home"></i>
+        <span>Accueil</span>
+      </a>
+      <a [routerLink]="['/profile']" routerLinkActive="active" class="nav-item" style="--item-index: 2">
+        <i class="fas fa-user"></i>
+        <span>Mon Profil</span>
+      </a>
+      <a [routerLink]="['/rendezvous']" routerLinkActive="active" class="nav-item" style="--item-index: 3">
+        <i class="fas fa-calendar-alt"></i>
+        <span>Rendez-vous</span>
+        <span class="badge">{{stats.rdvCount}}</span>
+      </a>
+      <a [routerLink]="['/messages']" routerLinkActive="active" class="nav-item" style="--item-index: 4">
+        <i class="fas fa-envelope"></i>
+        <span>Messages</span>
+      </a>
+      <a [routerLink]="['/notifications']" routerLinkActive="active" class="nav-item" style="--item-index: 5">
+        <i class="fas fa-bell"></i>
+        <span>Notifications</span>
+      </a>
+      <a [routerLink]="['/parametres']" routerLinkActive="active" class="nav-item" style="--item-index: 6">
+        <i class="fas fa-cog"></i>
+        <span>Paramètres</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="top-bar">
+      <div class="site-title">
+        <i class="fas fa-hospital-alt"></i>
+        <h1>AMS Health</h1>
+        <span class="site-version">Pro</span>
+      </div>
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Rechercher...">
+        <button class="search-filter">
+          <i class="fas fa-filter"></i>
+        </button>
+      </div>
+      <div class="top-actions">
+        <button class="action-btn">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </button>
+        <button class="action-btn">
+          <i class="fas fa-envelope"></i>
+          <span class="notification-badge">2</span>
+        </button>
+        <div class="user-menu">
+          <img src="/assets/images/avatar.png" alt="Profile" class="mini-avatar">
+          <span class="user-name">{{patient.prenom}}</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="header-content">
+        <h1>Tableau de bord</h1>
+        <div class="breadcrumb">
+          <span>Accueil</span>
+          <i class="fas fa-chevron-right"></i>
+          <span>Tableau de bord</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="welcome-banner">
+      <div class="welcome-content">
+        <h2>Bonjour, {{patient.prenom}} ! 👋</h2>
+        <p>Bienvenue sur votre espace personnel AMS Health. Que souhaitez-vous faire aujourd'hui ?</p>
+      </div>
+      <div class="quick-actions">
+        <button class="action-card">
+          <i class="fas fa-calendar-plus"></i>
+          <span>Nouveau RDV</span>
+        </button>
+        <button class="action-card" (click)="showPrescriptions()">
+          <i class="fas fa-file-medical"></i>
+          <span>Ordonnances</span>
+        </button>
+        <button class="action-card" (click)="showMyDoctors()">
+          <i class="fas fa-user-md"></i>
+          <span>Mes Médecins</span>
+        </button>
+      </div>
+
+      <!-- Modal Mes Médecins -->
+      <div class="modal" [class.show]="isMyDoctorsVisible">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Mes Médecins Consultés</h2>
+            <button class="close-btn" (click)="hideMyDoctors()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="doctors-list">
+              <div class="doctor-item" *ngFor="let doctor of myDoctors">
+                <img [src]="doctor.image" [alt]="doctor.nom">
+                <div class="doctor-details">
+                  <h4>{{doctor.nom}}</h4>
+                  <p class="specialty">{{doctor.specialite}}</p>
+                  <p class="last-visit">Dernière consultation: {{doctor.lastVisit}}</p>
+                </div>
+                <button class="book-again-btn" (click)="bookAppointment(doctor)">
+                  Reprendre RDV
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Ordonnances -->
+      <div class="modal" [class.show]="isPrescriptionsVisible">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Mes Ordonnances</h2>
+            <button class="close-btn" (click)="hidePrescriptions()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="prescriptions-list">
+              <div class="prescription-item" *ngFor="let prescription of prescriptions">
+                <div class="prescription-icon">
+                  <i class="fas fa-file-prescription"></i>
+                </div>
+                <div class="prescription-details">
+                  <h4>Dr. {{prescription.doctorName}}</h4>
+                  <p class="prescription-date">{{prescription.date}}</p>
+                  <p class="prescription-type">{{prescription.type}}</p>
+                </div>
+                <div class="prescription-actions">
+                  <button class="view-btn" (click)="viewPrescription(prescription)">
+                    <i class="fas fa-eye"></i> Voir
+                  </button>
+                  <button class="download-btn" (click)="downloadPrescription(prescription)">
+                    <i class="fas fa-download"></i> Télécharger
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Visualisation Ordonnance -->
+      <div class="modal prescription-view-modal" [class.show]="isViewPrescriptionVisible">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="header-main">
+              <i class="fas fa-file-medical"></i>
+              <h2>Ordonnance du {{selectedPrescription?.date}}</h2>
+            </div>
+            <div class="header-actions">
+              <button class="share-btn">
+                <i class="fas fa-share-alt"></i>
+                Partager
+              </button>
+              <button class="close-btn" (click)="hideViewPrescription()">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <div class="modal-body">
+            <div class="prescription-view">
+              <div class="doctor-info">
+                <div class="doctor-header">
+                  <img [src]="selectedPrescription?.doctorImage" alt="Doctor" class="doctor-avatar">
+                  <div class="doctor-details">
+                    <h3>Dr. {{selectedPrescription?.doctorName}}</h3>
+                    <p class="specialty">{{selectedPrescription?.specialty}}</p>
+                    <p class="hospital">{{selectedPrescription?.hospital}}</p>
+                  </div>
+                </div>
+                <div class="prescription-metadata">
+                  <span class="metadata-item">
+                    <i class="fas fa-calendar"></i>
+                    Délivrée le {{selectedPrescription?.date}}
+                  </span>
+                  <span class="metadata-item">
+                    <i class="fas fa-clock"></i>
+                    Valable jusqu'au {{selectedPrescription?.validUntil}}
+                  </span>
+                </div>
+              </div>
+
+              <div class="prescription-content">
+                <div class="prescription-header">
+                  <div class="prescription-type">{{selectedPrescription?.type}}</div>
+                  <div class="prescription-status" [class.active]="selectedPrescription?.isValid">
+                    {{selectedPrescription?.isValid ? 'Valide' : 'Expirée'}}
+                  </div>
+                </div>
+                <div class="prescription-image">
+                  <img [src]="selectedPrescription?.imageUrl" alt="Ordonnance">
+                </div>
+              </div>
+
+              <div class="prescription-footer">
+                <div class="action-buttons">
+                  <button class="action-btn primary" [disabled]="!selectedPrescription" (click)="selectedPrescription && downloadPrescription(selectedPrescription)">
+                    <i class="fas fa-download"></i>
+                    Télécharger PDF
+                  </button>
+                  <button class="action-btn" [disabled]="!selectedPrescription" (click)="selectedPrescription && printPrescription(selectedPrescription)">
+                    <i class="fas fa-print"></i>
+                    Imprimer
+                  </button>
+                  <button class="action-btn" [disabled]="!selectedPrescription" (click)="selectedPrescription && sharePrescription(selectedPrescription)">
+                    <i class="fas fa-share"></i>
+                    Partager
+                  </button>
+                </div>
+                <div class="prescription-notes" *ngIf="selectedPrescription?.notes">
+                  <h4>Notes du médecin</h4>
+                  <p>{{selectedPrescription?.notes}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-area">
+      <!-- Stats Overview -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <div class="stat-info">
+            <h3>{{stats.rdvCount}}</h3>
+            <p>Rendez-vous</p>
+          </div>
+        </div>
+        <!-- Similar cards for consultations and prescriptions -->
+      </div>
+
+      <!-- Doctor Carousel -->
+      <section class="doctors-showcase">
+        <div class="section-header">
+          <h2>Vos Médecins</h2>
+          <div class="controls">
+            <button class="control-btn" (click)="slidePrev()">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="control-btn" (click)="slideNext()">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="doctors-slider" #slider>
+          <div *ngFor="let doctor of allDoctors" class="doctor-card">
+            <div class="doctor-header">
+              <img [src]="doctor.image" [alt]="doctor.nom">
+              <span class="availability online"></span>
+            </div>
+            <div class="doctor-info">
+              <h4>{{doctor.nom}}</h4>
+              <span class="specialty">{{doctor.specialite}}</span>
+              <div class="rating">
+                <i class="fas fa-star"></i>
+                <span>4.8</span>
+              </div>
+              <button class="book-btn" (click)="bookAppointment(doctor)">
+                Prendre RDV
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Global Stats -->
+      <div class="global-stats">
+        <h2>Statistiques Globales</h2>
+        <div class="stats-overview">
+          <div class="stat-box">
+            <i class="fas fa-user-md"></i>
+            <div>
+              <h3>{{stats.totalDoctors}}</h3>
+              <p>Médecins Disponibles</p>
+            </div>
+          </div>
+          <div class="stat-box">
+            <i class="fas fa-calendar-alt"></i>
+            <div>
+              <h3>{{stats.totalAppointments}}</h3>
+              <p>Rendez-vous Pris</p>
+            </div>
+          </div>
+          <div class="stat-box">
+            <i class="fas fa-heartbeat"></i>
+            <div>
+              <h3>{{stats.totalPatients}}</h3>
+              <p>Patients Inscrits</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activities -->
+      <div class="recent-activities">
+        <h2>Dernières Activités</h2>
+        <ul class="activity-list">
+          <li>
+            <i class="fas fa-calendar-check"></i>
+            <span>Rendez-vous confirmé avec Dr. {{recentActivity.doctorName}}</span>
+            <span class="activity-time">{{recentActivity.time}}</span>
+          </li>
+          <li>
+            <i class="fas fa-file-medical"></i>
+            <span>Nouvelle ordonnance ajoutée</span>
+            <span class="activity-time">{{recentActivity.time}}</span>
+          </li>
+          <li>
+            <i class="fas fa-envelope"></i>
+            <span>Message reçu de Dr. {{recentActivity.doctorName}}</span>
+            <span class="activity-time">{{recentActivity.time}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <footer class="app-footer">
+      <div class="footer-container">
+        <div class="footer-section">
+          <h3><i class="fas fa-hospital"></i> AMS Health</h3>
+          <p>Votre santé, notre priorité</p>
+        </div>
+        <div class="footer-section">
+          <h3><i class="fas fa-map-marker-alt"></i> Adresse</h3>
+          <p>{{footerData.adresse.rue}}</p>
+          <p>{{footerData.adresse.ville}}</p>
+        </div>
+        <div class="footer-section">
+          <h3><i class="fas fa-phone"></i> Contact</h3>
+          <p>Tél: {{footerData.contact.tel}}</p>
+          <p>Email: {{footerData.contact.email}}</p>
+        </div>
+        <div class="footer-section">
+          <h3><i class="fas fa-clock"></i> Horaires</h3>
+          <p>Lun - Ven: {{footerData.horaires.semaine}}</p>
+          <p>Sam: {{footerData.horaires.samedi}}</p>
+          <p>Dim: {{footerData.horaires.dimanche}}</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 AMS Health - Tous droits réservés</p>
+      </div>
+    </footer>
+  </main>
+</div>

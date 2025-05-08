@@ -1,0 +1,29 @@
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-nav {
+  width: 250px;
+  padding: 20px;
+  background: #f0f2f5;
+}
+
+.main-nav a {
+  display: block;
+  padding: 10px 15px;
+  color: #333;
+  text-decoration: none;
+  margin-bottom: 5px;
+  border-radius: 8px;
+}
+
+.main-nav a.active {
+  background: #2563eb;
+  color: white;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+}

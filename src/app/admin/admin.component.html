@@ -1,0 +1,30 @@
+<div class="admin-container">
+    <div *ngIf="!isAuthenticated" class="login-box">
+      <h2>Connexion Admin</h2>
+      <form (ngSubmit)="login()">
+        <input type="text" placeholder="Nom d'utilisateur" [(ngModel)]="username" name="username" required />
+        <input type="password" placeholder="Mot de passe" [(ngModel)]="password" name="password" required />
+        <button type="submit">Se connecter</button>
+        <p *ngIf="loginError" class="error-message">Identifiants invalides</p>
+      </form>
+    </div>
+  
+    <div *ngIf="isAuthenticated" class="crud-box">
+      <h2>Interface d'administration</h2>
+  
+      <form (ngSubmit)="addUser()">
+        <input type="text" placeholder="Nom" [(ngModel)]="newUser.name" name="name" required />
+        <input type="email" placeholder="Email" [(ngModel)]="newUser.email" name="email" required />
+        <button type="submit">Ajouter</button>
+      </form>
+  
+      <ul class="user-list">
+        <li *ngFor="let user of users">
+          {{ user.name }} ({{ user.email }})
+          <button (click)="editUser(user)">Modifier</button>
+          <button (click)="deleteUser(user)">Supprimer</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
