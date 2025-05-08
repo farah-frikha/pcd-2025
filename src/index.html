@@ -1,0 +1,90 @@
+<!doctype html>
+<html [lang]="settings?.language || 'fr'" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none" data-preloader="disable">
+<head>
+  <meta charset="utf-8" />
+  <title>AMS</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+  <meta content="Themesbrand" name="author" />
+  <!-- App favicon -->
+  <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+  <!-- jsvectormap css -->
+  <!-- <link href="assets/libs/jsvectormap/css/jsvectormap.min.css" rel="stylesheet" type="text/css" /> -->
+
+  <!--Swiper slider css-->
+  <!-- <link href="assets/libs/swiper/swiper-bundle.min.css" rel="stylesheet" type="text/css" /> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Layout config Js -->
+  <script src="assets/js/layout.js"></script>
+  <!-- Bootstrap Css -->
+  <!-- <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" /> -->
+  <!-- Icons Css -->
+  <!-- <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" /> -->
+  <!-- App Css-->
+  <!-- <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" /> -->
+  <!-- custom Css-->
+  <!-- <link href="assets/css/custom.min.css" rel="stylesheet" type="text/css" /> -->
+
+  <!-- Google Maps API (ajoute ton API key ici) -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+  <script src="https://www.google.com/maps/place/National+School+of+Computer+Science/@36.8137496,10.061191,17z/data=!3m1!4b1!4m6!3m5!1s0x12fd2d96d4a9d6c9:0xbbe38a2694938acf!8m2!3d36.8137496!4d10.0637659!16s%2Fg%2F1235kngn?entry=ttu&g_ep=EgoyMDI1MDUwNS4wIKXMDSoASAFQAw%3D%3D" async defer></script>
+  <script>
+    function initMap() {
+      var location = { lat: 48.8566, lng: 2.3522 };  // Exemple : Paris, France
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 10,
+        center: location
+      });
+      var marker = new google.maps.Marker({
+        position: location,
+        map: map,
+        title: 'Nous sommes ici !'
+      });
+    }
+  </script>
+
+</head>
+
+<body>
+  <app-root></app-root>
+
+  <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/libs/simplebar/simplebar.min.js"></script>
+  <script src="assets/libs/node-waves/waves.min.js"></script>
+  <script src="assets/libs/feather-icons/feather.min.js"></script>
+  <script src="assets/js/pages/plugins/lord-icon-2.1.0.js"></script>
+  <script src="assets/js/plugins.js"></script>
+
+  <!-- apexcharts -->
+  <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+
+  <!-- Vector map-->
+  <script src="assets/libs/jsvectormap/js/jsvectormap.min.js"></script>
+  <script src="assets/libs/jsvectormap/maps/world-merc.js"></script>
+
+  <!--Swiper slider js-->
+  <script src="assets/libs/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Dashboard init -->
+  <script src="assets/js/pages/dashboard-ecommerce.init.js"></script>
+
+  <!-- App js -->
+  <script> document.addEventListener("DOMContentLoaded", function () {
+    const script = document.createElement("script");
+    script.src = "assets/js/app.js";
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+  });
+  </script>
+   <script>
+    function toggleDetails(box) {
+      box.classList.toggle('active');
+    }
+  </script>
+</body>
+</html>
